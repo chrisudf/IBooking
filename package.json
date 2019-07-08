@@ -9,10 +9,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hapi/joi": "^15.1.0",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
     "helmet": "^3.18.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.6.1",
     "mongoose-auto-increment": "^5.0.1",
     "morgan": "^1.9.1",

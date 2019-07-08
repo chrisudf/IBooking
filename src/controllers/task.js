@@ -1,9 +1,7 @@
-// const tasks =[{'catgory':"cleaning", "due":"01/06/19"}]
-let currentId =1;
 const Task = require('../models/task');
 async function addTask(req,res){
-    var id = res.length
-    const{category,title,description} =req.body
+    // var id = res.length
+    const{id,category,title,description} =req.body
     const task= new Task({
         id,
         category,
@@ -19,7 +17,14 @@ async function getAllTasks(req,res){
     return res.json(tasks)
 }
 
-function getTask(req,res){
+async function getTask(req,res){
+  const id = req.params
+  const task =await Task.findById(id)
+
+  if(!task){
+    return res.status(404).json('task not found')
+  }
+  return res.json(task)
     
 }
 function updateTask(req, res) {}
