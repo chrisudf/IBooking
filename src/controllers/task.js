@@ -1,11 +1,14 @@
 // const tasks =[{'catgory':"cleaning", "due":"01/06/19"}]
+let currentId =1;
 const Task = require('../models/task');
 async function addTask(req,res){
+    var id = res.length
     const{category,title,description} =req.body
     const task= new Task({
+        id,
         category,
         title,
-        description
+        description,
     })
     await task.save()
     return res.json(task)

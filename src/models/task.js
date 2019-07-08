@@ -1,6 +1,18 @@
 const mongoose = require('mongoose');
+autoIncrement = require('mongoose-auto-increment');
+
+let counter = 1;
+let CountedId = {type: Number, default: () => counter++};
 
 const schema = new mongoose.Schema({
+  // _id: {
+  //   type: String,
+  //   uppercase: true,
+  //   // alias: 'code' // virtual `code` property
+  // },
+  id:{
+    type: Number,
+  },
   category: {
     type: String,
     required: true
@@ -11,7 +23,8 @@ const schema = new mongoose.Schema({
   },
   description: {
     type: String,
-    default: ''
+    default: '',
+    required: true
   },
   __v: { type: Number, select: false }
 },
@@ -23,9 +36,9 @@ const schema = new mongoose.Schema({
    
 });
 
-schema.virtual('code').get(function() {
-    return this._id;
-  });
+// schema.virtual('code').get(function() {
+//     return this._id;
+//   });
 const model = mongoose.model('Task', schema);
 
 module.exports = model;
