@@ -1,28 +1,32 @@
-const express = require ('express')
-const routes = require('./routes')
-
-const app = express()
-
-app.use(express.json())
-const seekers =[{'name':"zzz", "address":"test"}]
-const taskers =[{'name':"yyy", "address":"test1"}]
-const task =[{'catgory':"cleaning", "due":"01/06/19"}]
+require('dotenv').config();
+const express = require('express');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const cors = require('cors');
+const routes = require('./routes');
+const {connectToDB} =require('./utils/db')
 
 
-// app.use('/v1', routes);
 
-app.get('/seeker',(req,res)=>{
-    res.json(seekers)
+const app = express();
+const PORT = process.env.PORT || 3000;
+const morganLog =
+  process.env.NODE_ENV === 'production' ? morgan('common') : morgan('dev');
+
+app.use(helmet());
+app.use(morganLog);
+app.use(cors());
+app.use(express.json());
+ 
+app.use('/api', routes);
+
+connectToDB()
+  .then(()=>{
+  app.listen(PORT, () => {
+    console.log(`server listen on port ${PORT}`);
+  });
 })
-
-app.get('/tasker',(req,res)=>{
-  res.json(taskers)
-})
-
-app.get('/task',(req,res)=>{
-  res.json(task)
-})
-
-app.listen(8888,()=>{
-    console.log('server listening to port 8888')
+.catch(e=>{
+  console.error(e.message)
+  process.exit(1)
 })
