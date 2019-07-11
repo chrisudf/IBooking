@@ -1,9 +1,9 @@
 const Task = require('../models/task');
 async function addTask(req,res){
     // var id = res.length
-    const{id,category,title,description} =req.body
+    const{code,category,title,description} =req.body
     const task= new Task({
-        id,
+        code,
         category,
         title,
         description,
@@ -18,8 +18,8 @@ async function getAllTasks(req,res){
 }
 
 async function getTask(req,res){
-  const id = req.params
-  const task =await Task.findById(id)
+  const {id: code} = req.params
+  const task =await Task.findById(code)
 
   if(!task){
     return res.status(404).json('task not found')
@@ -27,9 +27,32 @@ async function getTask(req,res){
   return res.json(task)
     
 }
-function updateTask(req, res) {}
+async function updateTask(req, res) {
+  const { id: code } = req.params;
+  const { category, title, description } = req.body;
+  const newTask = await Task.findByIdAndUpdate(
+    code,
+    { category, title, description },
+    {
+      new: true // return the updated object
+      // runValidators: true // run validator against new value
+    }
+  );
+  if (!newTask) {
+    return res.status(404).json('task not found');
+  }
+  return res.json(newTask);
+}
 
-function deleteTask(req, res) {}
+async function deleteTask(req,res) {
+  const { id: code } = req.params;
+  const task = await Task.findByIdAndDelete(code);
+  if (!task) {
+    return res.status(404).json('task not found');
+  }
+  return res.sendStatus(200);
+}
+
 module.exports ={
     getAllTasks,
     getTask,
