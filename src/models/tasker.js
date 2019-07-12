@@ -1,9 +1,39 @@
-const taskers =[{'name':"yyy", "address":"test1"}]
+const mongoose = require('mongoose');
+const Joi = require('@hapi/joi');
 
-function getAllTasker(){
-    return JSON.parse(JSON.stringify(taskers))
-}
+const schema = new mongoose.Schema({
+  firstName: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 2
+  },
+  lastName: {
+    type: String,
+    required: true
+  },
+  dob:{
+    type:Date,
+    required:true
+  },
+  email: {
+    type: String,
+    required: true,
+    validate: {
+      validator: email => !Joi.validate(email, Joi.string().email()).error,
+      msg: 'Invalid email format'
+    }
+  },
+  phone:{
+    type: String,
+    required:true
+  },
+  description: {
+    type: String,
+    required: true
+  }
+});
 
-module.exports ={
-    getAllTasker
-}
+const model = mongoose.model('Tasker', schema);
+
+module.exports = model;

@@ -1,12 +1,19 @@
 const express = require('express');
 const {
-    getAllTasker
+    getAllTaskers,
+    addTasker,
+    updateTasker,
+    deleteTasker,
+    getTasker
 } = require('../controllers/tasker');
 // const validateId = require('../middleware/validateId');
 
 const router = express.Router();
 
-router.get('', getAllTasker);
-
+router.get('', getAllTaskers);
+router.get('/:id', getTasker);
+router.post('/', addTasker);
+router.put('/:id', updateTasker);
+router.delete('/:id', deleteTasker);
 
 module.exports = router;
