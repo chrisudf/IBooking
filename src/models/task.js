@@ -24,6 +24,7 @@ const schema = new mongoose.Schema({
       default: '',
       required: true
     },
+    seekers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Seeker' }],
     __v: { type: Number, select: false }
   },
   {

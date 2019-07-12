@@ -1,4 +1,5 @@
 const Seeker = require('../models/seeker');
+const Task = require('../models/task');
 
 async function addSeeker(req,res){
   const {firstName,lastName,dob,email,phone} =req.body;
@@ -20,7 +21,7 @@ async function getAllSeekers(req, res) {
 
 async function getSeeker(req,res){
   const {id} = req.params;
-  const seeker = await Seeker.findById(id);
+  const seeker = await Seeker.findById(id).populate('tasks', 'code title category description').exec();
   if (!seeker) {
     return res.status(404).json('seeker not found');
   }
@@ -50,16 +51,52 @@ async function deleteSeeker(req, res) {
   if (!seeker) {
     return res.status(404).json('seeker not found');
   }
+  // clean the refs
+  await Task.updateMany(
+    { _id: { $in: seeker.tasks } },
+    { $pull: { seekers: seeker._id } }
+  ).exec();
   return res.sendStatus(200);
-
 }
 
+async function addTask(req, res) {
+  const { id, code } = req.params;
+  const task = await Task.findById(code).exec();
+  const seeker = await Seeker.findById(id).exec();
+  if (!seeker || !task) {
+    return res.status(404).json('seeker or task not found');
+  }
+  seeker.tasks.addToSet(task._id);
+  task.seekers.addToSet(seeker._id);
+  await task.save();
+  await seeker.save();
+  return res.json(seeker);
+}
 
+async function deleteTask(req, res) {
+  const { id, code } = req.params;
+  const seeker = await Seeker.findById(id).exec();
+  const task = await Task.findById(code).exec();
+  if (!seeker || !task) {
+    return res.status(404).json('seeker or task not found');
+  }
+  const oldCount = seeker.tasks.length;
+  seeker.tasks.pull(task._id);
+  if (seeker.tasks.length === oldCount) {
+    return res.status(404).json('Requirement does not exist');
+  }
+  task.seekers.pull(seeker._id);
+  await task.save();
+  await seeker.save();
+  return res.json(seeker);
+}
 
 module.exports = {
   addSeeker,
   getAllSeekers,
   getSeeker,
   updateSeeker,
-  deleteSeeker
+  deleteSeeker,
+  addTask,
+  deleteTask
 };

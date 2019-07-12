@@ -27,7 +27,9 @@ const schema = new mongoose.Schema({
   phone:{
     type: String,
     required:true
-  }
+  },
+  tasks: [{ type: String, ref: 'Task' }]
+
 });
 
 const model = mongoose.model('Seeker', schema);

@@ -6,7 +6,6 @@ const {
     deleteTasker,
     getTasker
 } = require('../controllers/tasker');
-// const validateId = require('../middleware/validateId');
 
 const router = express.Router();
 

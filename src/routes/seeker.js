@@ -4,7 +4,9 @@ const {
     addSeeker,
     updateSeeker,
     deleteSeeker,
-    getSeeker
+    getSeeker,
+    addTask,
+    deleteTask
 } = require('../controllers/seeker');
 // const validateId = require('../middleware/validateId');
 
@@ -15,5 +17,7 @@ router.get('/:id', getSeeker);
 router.post('/', addSeeker);
 router.put('/:id', updateSeeker);
 router.delete('/:id', deleteSeeker);
+router.post('/:id/task/:code', addTask);
+router.delete('/:id/task/:code', deleteTask);
 
 module.exports = router;
