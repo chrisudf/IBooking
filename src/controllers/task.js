@@ -62,6 +62,7 @@ async function deleteTask(req,res) {
       tasks: task._id
     },
     {
+      
       $pull: {
         tasks: task._id
       }
