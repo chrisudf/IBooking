@@ -60,17 +60,71 @@ async function deleteSeeker(req, res) {
 }
 
 async function addTask(req, res) {
-  const { id, code } = req.params;
-  const task = await Task.findById(code).exec();
+  const { id } = req.params;
   const seeker = await Seeker.findById(id).exec();
-  if (!seeker || !task) {
-    return res.status(404).json('seeker or task not found');
+  if (!seeker) {
+    return res.status(404).json('seeker not found');
   }
+  const{code,category,title,description} =req.body;
+  const existingTask = await Task.findById(code).exec();
+  if (existingTask) {
+    return res.status(400).json('Duplicate Task code');
+  };
+  const task= new Task({
+      code,
+      category,
+      title,
+      description,
+  });
+  await task.save();
   seeker.tasks.addToSet(task._id);
   task.seekers.addToSet(seeker._id);
   await task.save();
   await seeker.save();
   return res.json(seeker);
+}
+
+async function getAllTasks(req,res){
+  const { id } = req.params;
+  const seeker = await Seeker.findById(id).exec();
+  if (!seeker) {
+    return res.status(404).json('seeker not found');
+  }
+  const tasks = await Task.find();
+  return res.json(tasks);
+}
+
+async function getTask(req,res){
+  const { id, code } = req.params;
+  const seeker = await Seeker.findById(id).exec();
+  const task = await Task.findById(code).exec();
+  if (!seeker || !task) {
+    return res.status(404).json('seeker or task not found');
+  }
+  // const task =await Task.findById(code).populate('seekers', 'firstName lastName email phone').exec();
+  return res.json(task);
+}
+
+async function updateTask(req, res) {
+  const { id, code } = req.params;
+  const { category, title, description } = req.body;
+  const seeker = await Seeker.findById(id).exec();
+  const task = await Task.findById(code).exec();
+  if (!seeker || !task) {
+    return res.status(404).json('seeker or task not found');
+  }
+  const newTask = await Task.findByIdAndUpdate(
+    code,
+    { category, title, description },
+    {
+      new: true // return the updated object
+      // runValidators: true // run validator against new value
+    }
+  );
+  if (!newTask) {
+    return res.status(404).json('task not found');
+  }
+  return res.json(newTask);
 }
 
 async function deleteTask(req, res) {
@@ -98,5 +152,8 @@ module.exports = {
   updateSeeker,
   deleteSeeker,
   addTask,
+  getAllTasks,
+  getTask,
+  updateTask,
   deleteTask
 };
