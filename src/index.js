@@ -9,7 +9,7 @@ const {connectToDB} =require('./utils/db')
 const errorHandler = require('./middleware/errorHandler')
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const morganLog =
   process.env.NODE_ENV === 'production' ? morgan('common') : morgan('dev');
 
