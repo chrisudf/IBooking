@@ -22,9 +22,9 @@ router.put('/:id', updateSeeker);
 router.delete('/:id', deleteSeeker);
 // router.post('/:id/task/:code', addTask);
 router.post('/:id/post', addTask);
-router.get('/:id/task', getAllTasks);
-router.get('/:id/task/:code', getTask);
-router.put('/:id/task/:code',updateTask);
-router.delete('/:id/task/:code', deleteTask);
+router.get('/:id/tasks', getAllTasks);
+router.get('/:id/task/:_id', getTask);
+router.put('/:id/task/:_id',updateTask);
+router.delete('/:id/task/:_id', deleteTask);
 
 module.exports = router;

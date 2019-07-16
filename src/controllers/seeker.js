@@ -65,13 +65,13 @@ async function addTask(req, res) {
   if (!seeker) {
     return res.status(404).json('seeker not found');
   }
-  const{code,category,title,description} =req.body;
-  const existingTask = await Task.findById(code).exec();
-  if (existingTask) {
-    return res.status(400).json('Duplicate Task code');
-  };
+  const{category,title,description} =req.body;
+  // const existingTask = await Task.findById(code).exec();
+  // if (existingTask) {
+  //   return res.status(400).json('Duplicate Task code');
+  // };
   const task= new Task({
-      code,
+      // code,
       category,
       title,
       description,
@@ -95,9 +95,9 @@ async function getAllTasks(req,res){
 }
 
 async function getTask(req,res){
-  const { id, code } = req.params;
+  const { id, _id } = req.params;
   const seeker = await Seeker.findById(id).exec();
-  const task = await Task.findById(code).exec();
+  const task = await Task.findById(_id).exec();
   if (!seeker || !task) {
     return res.status(404).json('seeker or task not found');
   }
@@ -106,15 +106,15 @@ async function getTask(req,res){
 }
 
 async function updateTask(req, res) {
-  const { id, code } = req.params;
+  const { id, _id } = req.params;
   const { category, title, description } = req.body;
   const seeker = await Seeker.findById(id).exec();
-  const task = await Task.findById(code).exec();
+  const task = await Task.findById(_id).exec();
   if (!seeker || !task) {
     return res.status(404).json('seeker or task not found');
   }
   const newTask = await Task.findByIdAndUpdate(
-    code,
+    _id,
     { category, title, description },
     {
       new: true // return the updated object
@@ -128,9 +128,9 @@ async function updateTask(req, res) {
 }
 
 async function deleteTask(req, res) {
-  const { id, code } = req.params;
+  const { id, _id } = req.params;
   const seeker = await Seeker.findById(id).exec();
-  const task = await Task.findById(code).exec();
+  const task = await Task.findById(_id).exec();
   if (!seeker || !task) {
     return res.status(404).json('seeker or task not found');
   }

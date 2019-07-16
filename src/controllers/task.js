@@ -4,13 +4,12 @@ const Seeker = require('../models/seeker');
 
 async function addTask(req,res){
     // var id = res.length
-    const{code,category,title,description} =req.body;
-    const existingTask = await Task.findById(code).exec();
-    if (existingTask) {
-      return res.status(400).json('Duplicate Task code');
-    };
+    const{category,title,description} =req.body;
+    // const existingTask = await Task.findById(id).exec();
+    // if (existingTask) {
+    //   return res.status(400).json('Duplicate Task code');
+    // };
     const task= new Task({
-        code,
         category,
         title,
         description,
@@ -25,7 +24,7 @@ async function getAllTasks(req,res){
 }
 
 async function getTask(req,res){
-  const {id: code} = req.params;
+  const id = req.params;
   const task =await Task.findById(code).populate('seekers', 'firstName lastName email phone').exec();
 
   if(!task){
@@ -35,7 +34,7 @@ async function getTask(req,res){
     
 }
 async function updateTask(req, res) {
-  const { id: code } = req.params;
+  const { id } = req.params;
   const { category, title, description } = req.body;
   const newTask = await Task.findByIdAndUpdate(
     code,
@@ -52,7 +51,7 @@ async function updateTask(req, res) {
 }
 
 async function deleteTask(req,res) {
-  const { id: code } = req.params;
+  const { id } = req.params;
   const task = await Task.findByIdAndDelete(code);
   if (!task) {
     return res.status(404).json('task not found');
