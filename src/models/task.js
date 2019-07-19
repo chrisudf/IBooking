@@ -29,7 +29,8 @@ const schema = new mongoose.Schema({
     toJSON: {
       virtuals: true // required to show 'code' property
     },
-    id: false // hide `id` virtual property
+    // id: false 
+    // hide `id` virtual property
   }
 );
 

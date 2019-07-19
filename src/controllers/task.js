@@ -19,7 +19,7 @@ async function addTask(req,res){
 }
 
 async function getAllTasks(req,res){
-    const tasks = await Task.find();
+    const tasks = await Task.find().exec();
     return res.json(tasks);
 }
 
