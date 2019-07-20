@@ -2,13 +2,14 @@ const Seeker = require('../models/seeker');
 const Task = require('../models/task');
 
 async function addSeeker(req,res){
-  const {firstName,lastName,dob,email,phone} =req.body;
+  const {firstName,lastName,dob,email,phone,description} =req.body;
   const seeker = new Seeker({
     firstName,
     lastName,
     dob,
     email,
-    phone
+    phone,
+    description
   })
   await seeker.save();
   return res.json(seeker);
@@ -30,10 +31,10 @@ async function getSeeker(req,res){
 
 async function updateSeeker(req, res) {
   const { id } = req.params;
-  const { firstName, lastName, dob, email, phone } = req.body;
+  const { firstName, lastName, dob, email, phone ,description} = req.body;
   const newSeeker = await Seeker.findByIdAndUpdate(
     id,
-    { firstName, lastName, dob, email, phone },
+    { firstName, lastName, dob, email, phone,description},
     {
       new: true // return the updated object
       // runValidators: true // run validator against new value

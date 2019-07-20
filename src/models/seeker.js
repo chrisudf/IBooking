@@ -28,6 +28,10 @@ const schema = new mongoose.Schema({
     type: String,
     required:true
   },
+  description: {
+    type: String,
+    required: false
+  },
   tasks: [{ type: String, ref: 'Task' }]
 
 });
